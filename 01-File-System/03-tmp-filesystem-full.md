@@ -1,6 +1,5 @@
 Scenario 3: /tmp Filesystem Full
 ================================
--- Production Scenario
 
 A CI/CD pipeline suddenly starts failing during deployments. Developers also report that application uploads are failing, and system administrators cannot install packages. Investigation reveals that the /tmp filesystem has reached 100% usage.
 
