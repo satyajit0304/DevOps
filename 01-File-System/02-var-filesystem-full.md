@@ -41,7 +41,8 @@ Symptoms
 
 Investigation Workflow
 ===================
--- Step 1: Verify /var Usage
+- Step 1: Verify /var Usage
+=============================
 df -h /var
 
 Explanation
@@ -59,7 +60,8 @@ Interpretation
 - Total capacity: 50 GB.
 - Free space: 0 GB.
   
--- Step 2: Determine Which Directory Uses the Most Space
+- Step 2: Determine Which Directory Uses the Most Space
+======================================================
   
   du -xh --max-depth=1 /var | sort -hr
 
@@ -80,7 +82,8 @@ Interpretation
 
 Most of the space is being used by /var/log
 
--- Step 3: Inspect Large Log Files
+- Step 3: Inspect Large Log Files
+==================================
 find /var/log -type f -size +100M -exec ls -lh {} \;
 Explanation
 - find → Search files.
@@ -96,7 +99,8 @@ Interpretation
 
 Multiple log files have grown abnormally.
 
--- Step 4: Check if Log Rotation Is Working
+- Step 4: Check if Log Rotation Is Working
+===========================================
 logrotate -d /etc/logrotate.conf
 
 Explanation
@@ -110,7 +114,8 @@ Common Problems
 - Rotation disabled.
 - Application keeping log files open.
 
--- Step 5: Examine System Journal Usage
+- Step 5: Examine System Journal Usage
+======================================
 journalctl --disk-usage
 
 Archived and active journals take up 15.6G on disk.
@@ -139,7 +144,8 @@ If the cache is consuming significant space:
 dnf clean all
 apt clean
 
--- Step 6: Look for Deleted Files Still Held Open
+- Step 6: Look for Deleted Files Still Held Open
+===============================================
 lsof +L1
 
 java  1256 appuser 10w REG 253,1 15G /var/log/app.log (deleted)

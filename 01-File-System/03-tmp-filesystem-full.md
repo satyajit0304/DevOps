@@ -37,7 +37,8 @@ java.io.IOException: No space left on device
 
 Investigation Workflow
 =======================
--- Step 1: Check /tmp Filesystem Usage
+- Step 1: Check /tmp Filesystem Usage
+======================================
 df -h /tmp
 Explanation
 
@@ -53,7 +54,8 @@ Interpretation
 
 The tmpfs mounted on /tmp has no available space.
 
--- Step 2: Check Whether /tmp Is a Memory Filesystem
+- Step 2: Check Whether /tmp Is a Memory Filesystem
+======================================================
 mount | grep /tmp
 
 Explanation
@@ -68,7 +70,8 @@ Interpretation
 
 This is important because cleaning /tmp frees memory as well as temporary storage.
 
--- Step 3: Check Size of Directories Under /tmp
+- Step 3: Check Size of Directories Under /tmp
+================================================
 
 du -xh --max-depth=1 /tmp | sort -hr
 
@@ -86,7 +89,8 @@ Interpretation
 
 The Jenkins workspace is consuming most of the space.
 
--- Step 4: Find Large Files
+- Step 4: Find Large Files
+=============================
 find /tmp -type f -size +100M -exec ls -lh {} \;
 
 Explanation
@@ -102,7 +106,8 @@ Interpretation
 
 Large temporary files were not cleaned up.
 
--- Step 5: Check Which Users Own the Files
+- Step 5: Check Which Users Own the Files
+============================================
 find /tmp -printf "%u\n" | sort | uniq -c
 
 Explanation
@@ -119,7 +124,8 @@ Interpretation
 
 Most temporary files belong to the jenkins user.
 
--- Step 6: Find Old Temporary Files
+- Step 6: Find Old Temporary Files
+===================================
 find /tmp -type f -mtime +7
 
 Explanation
@@ -132,7 +138,8 @@ Interpretation
 
 These stale files are good candidates for cleanup after verifying they are no longer needed.
 
--- Step 7: Check Open Files in /tmp
+- Step 7: Check Open Files in /tmp
+====================================
 
 lsof +D /tmp
 
@@ -146,7 +153,8 @@ Interpretation
 
 The Java process is actively using the file. Deleting it before the process finishes could cause application errors.
 
--- Step 8: Check Available Memory (for tmpfs)
+- Step 8: Check Available Memory (for tmpfs)
+==========================================
 free -h
 Explanation
 
@@ -161,7 +169,8 @@ Interpretation
 
 Because /tmp is a tmpfs, high memory usage can contribute to /tmp filling up.
 
--- Step 9: Remove Old Temporary Files
+- Step 9: Remove Old Temporary Files
+===================================
 
 Only after confirming they are safe to delete:
 
@@ -173,7 +182,8 @@ Deletes files older than seven days.
 
 Warning: Never blindly delete files from /tmp on a production system without confirming they are not in use.
 
--- Step 10: Verify Cleanup
+- Step 10: Verify Cleanup
+===============================
 df -h /tmp
 Example Output
 Filesystem      Size Used Avail Use% Mounted on
